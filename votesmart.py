@@ -10,10 +10,7 @@ __version__ = "0.3.4"
 __copyright__ = "Copyright (c) 2016 Project Vote Smart"
 __license__ = "BSD"
 
-try:
-    from urllib2 import urlopen, HTTPError
-except ImportError:
-    from urllib.request import urlopen, HTTPError
+import requests
 
 try:
     from urllib import urlencode
@@ -210,22 +207,25 @@ class votesmart(object):
 
     apikey = None
 
+    apiServer = 'http://api.votesmart.org/'
+
     @staticmethod
     def _apicall(func, params):
         if votesmart.apikey is None:
             raise VotesmartApiError('Missing Project Vote Smart apikey')
 
         params = dict([(k,v) for (k,v) in params.items() if v])
-        url = 'http://api.votesmart.org/%s?o=JSON&key=%s&%s' % (func,
-            votesmart.apikey, urlencode(params))
+        params['key'] = votesmart.apikey
+        params['o'] = 'JSON'
+        url = '{}/{}'.format(votesmart.apiServer, func)
         try:
-            response = urlopen(url).read()
-            obj = json.loads(response.decode('utf-8'))
+            response = requests.get(url, params=params)
+            obj = response.json()
             if 'error' in obj:
                 raise VotesmartApiError(obj['error']['errorMessage'])
             else:
                 return obj
-        except HTTPError as e:
+        except requests.HTTPError as e:
             raise VotesmartApiError(e)
         except ValueError as e:
             raise VotesmartApiError('Invalid Response')

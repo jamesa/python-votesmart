@@ -12,16 +12,6 @@ __license__ = "BSD"
 
 import requests
 
-try:
-    from urllib import urlencode
-except ImportError:
-    from urllib.parse import urlencode
-
-try:
-    import json
-except ImportError:
-    import simplejson as json
-
 class VotesmartApiError(Exception):
     """ Exception for Sunlight API errors """
 

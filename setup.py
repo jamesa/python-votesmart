@@ -22,6 +22,6 @@ setup(name="python-votesmart",
                    "Programming Language :: Python :: 2.7",
                    "Programming Language :: Python :: 3.5"
                    ],
-       install_requires=["simplejson >= 1.8", "requests >= 2.26"]
+       install_requires=["requests >= 2.26"]
       )
 
